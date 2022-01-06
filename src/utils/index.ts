@@ -44,7 +44,7 @@ export const approve = async (
     return tokenContract.methods
       .approve(spenderAddress, ethers.constants.MaxUint256)
       .send(
-        { from: userAddress, gas: 200000 },
+        { from: userAddress, gas: 2000000 },
         async (error: any, txHash: string) => {
           if (error) {
             console.log('ERC20 could not be approved', error)
@@ -100,7 +100,7 @@ export const getEthBalance = async (
 export const getBalance = async (
   provider: provider,
   tokenAddress: string,
-  userAddress: string
+  userAddress: string,
 ): Promise<string> => {
   const tokenContract = getERC20Contract(provider, tokenAddress)
   try {

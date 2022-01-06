@@ -7,7 +7,6 @@ import useWallet from 'hooks/useWallet'
 import { approve } from 'utils'
 
 import useAllowance from './useAllowance'
-import { Contract } from 'ethers'
 
 const useApproval = (
   spenderAddress?: string,
@@ -22,7 +21,7 @@ const useApproval = (
     account,
     ethereum,
   }: { account: string | null | undefined; ethereum?: provider } = useWallet()
-
+  
   const handleApprove = useCallback(async () => {
     if (!ethereum || !account || !spenderAddress) {
       return
@@ -37,7 +36,6 @@ const useApproval = (
         tokenContract
       )
       setIsApproved(result)
-      console.log(result);
       setIsApproving(false)
     } catch (e) {
       setIsApproving(false)
@@ -52,16 +50,18 @@ const useApproval = (
     spenderAddress,
   ])
 
-  useEffect(() => {
-    if (allowance?.isGreaterThan(minimumRequiredApprovalQuantity)) {
-      setIsApproved(true)
-      return
-    }
-    else {
-      setIsApproved(false)
-    }
+  // useEffect(() => {
+  //   // console.log(allowance.toNumber());
+  //   // console.log(minimumRequiredApprovalQuantity.toNumber());
+  //   if (allowance?.isGreaterThan(minimumRequiredApprovalQuantity)) {
+  //     setIsApproved(true)
+  //     return
+  //   }
+  //   else {
+  //     setIsApproved(false)
+  //   }
 
-  }, [allowance, setIsApproved])
+  // }, [allowance, setIsApproved])
 
   return {
     isApproved,

@@ -14,6 +14,13 @@ export const eth2xfliSuppyCapAddress =
 export const btc2xfliSuppyCapAddress =
   process.env.REACT_APP_BTC2X_FLI_SUPPLY_CAP_ADDRESS
 
+// Box Token Address
+export const boxTokenAddress = 
+  process.env.REACT_APP_POLYGON_BOX_TOKEN_ADDRESS
+
+// Quickswap 
+export const quickSwapRouterAddress = 
+  process.env.REACT_APP_QUICK_SWAP_ROUTER_ADDRESS
 // Uniswap V2 Addresses
 export const uniswapEthDpiLpTokenAddress =
   process.env.REACT_APP_UNISWAP_ETH_DPI_LP_TOKEN_ADDRESS
@@ -91,6 +98,8 @@ export const governanceModuleAddress =
   process.env.REACT_APP_SETJS_GOVERNANCE_MODULE
 
 // Polygon Addresses
+export const maticAddress = 
+  process.env.REACT_APP_MATIC_ADDRESS
 export const indexTokenPolygonAddress =
   process.env.REACT_APP_POLYGON_INDEX_TOKEN_ADDRESS
 export const dpiTokenPolygonAddress =
@@ -121,3 +130,19 @@ export const basicIssuanceModulePolygonAddress =
   process.env.REACT_APP_POLYGON_SETJS_BASIC_ISSUANCE_MODULE
 export const dataTokenPolygonAddress =
   process.env.REACT_APP_POLYGON_DATA_TOKEN_ADDRESS
+
+// token paths (polygon / Test polygon)
+
+export const ethToUSDCPath = [
+  maticAddress,
+  usdcTokenPolygonAddress
+]
+export const ethToBoxPath = [
+  maticAddress,
+  usdcTokenPolygonAddress,
+  boxTokenAddress
+] 
+export const usdcToBoxPath = [
+  usdcTokenPolygonAddress,
+  boxTokenAddress
+]

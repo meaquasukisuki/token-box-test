@@ -13,40 +13,71 @@ import useMediaQuery from 'hooks/useMediaQuery'
 import useWallet from 'hooks/useWallet'
 import { fromWei, getBalance } from 'utils'
 
-import DpiStakeModal from './components/DpiStakeModal'
-import { getPoolAPR, stakeBoxLpTokens } from 'index-sdk/boxStaking'
+import BoxStakeModal from './components/BoxStakeModal'
+import {  addLiquidity, stakeBoxLpTokens, swapETHForExactTokens } from 'index-sdk/boxStaking'
 import BigNumber from 'utils/bignumber'
+import { ethToBoxPath, ethToUSDCPath } from 'constants/ethContractAddresses'
 
 const Stake: React.FC = () => {
   const [stakeModalIsOpen, setStakeModalIsOpen] = useState(false)
   const [APR, setAPR] = useState(0)
-  useEffect(() => {
-    getPoolAPR(ethereum,0).then((res) => {
-      setAPR(res.valueOf())
-    })
-    getBalance(ethereum,"0xFbC43719edb9f52a63d4286166E379f6D58B41ae","0x7674bce4ada3590fe0f8b6a9e6cc43948c863d24").then((res) => {
-      console.log(res);
-      
-    })
-    return () => {
-      
-    }
-  }, [])
+  const {status,ethereum,account} = useWallet()
+  
+  const { 
+    stakedFarmTwoBalance: stakedBalance, 
+    unharvestedFarmTwoBalance,
+    uniswapBoxLpBalance,
+    stakedBoxLpBalance,
+    userStakedBoxLpBalance 
+  } = useBalances()
 
-  const { stakedFarmTwoBalance: stakedBalance, unharvestedFarmTwoBalance } =
-    useBalances()
-
-  const { status,ethereum } = useWallet()
   const {
-    isApproved,
-    isApproving,
-    onApprove,
+    isBoxApproved,
+    isLPBoxApproved,
+    isUSDCTokenApproved,
+    isBoxApprovedToQuickSwap,
+    isUSDCTokenApprovedToQuickSwap,
+    isBoxApproving,
+    isUSDCTokenApproving,
+    isLPBoxApproving,
+    isBoxApprovingToQuickSwap,
+    isUSDCTokenApprovingToQuickSwap,
+    onBoxApprove,
+    onLPBoxApprove,
+    onUSDCApprove,
+    onUSDCTokenApproveToQuickSwap,
+    onBoxApproveToQuickSwap,
     onStake,
     onUnstakeAndHarvest,
     onHarvest,
   } = useBoxTokenFarm()
 //   const { farmTwoApy } = usePrices()
   const { isMobile } = useMediaQuery()
+
+  const onGetUsdc = async () => {
+    await swapETHForExactTokens(
+      ethereum,
+      account,
+      10,
+      ethToUSDCPath
+    )
+  }
+
+  const onGetBox =async () => {
+    await swapETHForExactTokens(
+      ethereum,
+      account,
+      10,
+      ethToBoxPath
+    )
+  }
+
+  const onAddLiquidity =async () => {
+    await addLiquidity(
+      ethereum,
+      account
+    )
+  }
 
   const handleDismissStakeModal = useCallback(() => {
     setStakeModalIsOpen(false)
@@ -69,27 +100,27 @@ const Stake: React.FC = () => {
       return <Button disabled full text='Stake' variant='secondary' />
     }
     
-    if (!isApproved) {
+    if (!isLPBoxApproved) {
       return (
         <Button
-          disabled={isApproving}
+          disabled={isLPBoxApproving}
           full
-          onClick={onApprove}
-          text={!isApproving ? 'Approve staking' : 'Approving staking...'}
+          onClick={onLPBoxApprove}
+          text={!isLPBoxApproving ? 'Approve staking' : 'Approving staking...'}
           variant={
-            isApproving || status !== 'connected' ? 'secondary' : 'default'
+            isLPBoxApproving || status !== 'connected' ? 'secondary' : 'default'
           }
         />
       )
     }
 
-    if (isApproved) {
+    if (isLPBoxApproved) {
       return <Button full onClick={handleStakeClick} text='Stake' />
     }
-  }, [isApproved, isApproving, status, handleStakeClick, onApprove])
+  }, [isLPBoxApproved, isLPBoxApproving, status, handleStakeClick, onLPBoxApprove])
 
   const UnstakeButton = useMemo(() => {
-    const hasStaked = stakedBalance && fromWei(stakedBalance).gt(0)
+    const hasStaked = stakedBoxLpBalance && fromWei(stakedBoxLpBalance).gt(0)
     if (status !== 'connected' || !hasStaked) {
       return <Button disabled full text='Unstake & Claim' variant='secondary' />
     }
@@ -102,7 +133,7 @@ const Stake: React.FC = () => {
         variant='secondary'
       />
     )
-  }, [stakedBalance, status, onUnstakeAndHarvest])
+  }, [stakedBoxLpBalance, status, onUnstakeAndHarvest])
 
   const ClaimButton = useMemo(() => {
     if (status !== 'connected') {
@@ -112,12 +143,12 @@ const Stake: React.FC = () => {
   }, [status, onHarvest])
 
   const formattedStakedBalance = useMemo(() => {
-    if (stakedBalance) {
-      return numeral(stakedBalance.toString()).format('0.00000a')
+    if (stakedBoxLpBalance !== undefined) {
+      return numeral(stakedBoxLpBalance.toString()).format('0.00000a')
     } else {
       return '--'
     }
-  }, [stakedBalance])
+  }, [stakedBoxLpBalance])
 
   const formattedEarnedBalance = useMemo(() => {
     if (unharvestedFarmTwoBalance) {
@@ -154,12 +185,12 @@ const Stake: React.FC = () => {
                   <StyledFarmText>
                     {formattedStakedBalance}
                     <StyledTokenIcon
-                      alt='eth dpi icon'
+                      alt='box icon'
                       src='https://index-dao.s3.amazonaws.com/eth-dpi.svg'
                     />
                   </StyledFarmText>
                   <StyledSectionLabel>
-                    Staked ETH Leverage 2X / Box Uniswap LP Tokens
+                    Box LP Tokens
                   </StyledSectionLabel>
                 </div>
 
@@ -192,11 +223,52 @@ const Stake: React.FC = () => {
           </StyledCardActions>
         </div>
       </Card>
-      <DpiStakeModal
+      <BoxStakeModal
         isOpen={stakeModalIsOpen}
         onDismiss={handleDismissStakeModal}
         onStake={handleOnStake}
       />
+      <button onClick={onGetUsdc}>
+        get Usdc
+      </button>
+      <button onClick={onGetBox}>
+        get box
+      </button>
+      {
+        !isUSDCTokenApprovedToQuickSwap && 
+        ( 
+          <button 
+            onClick={onUSDCTokenApproveToQuickSwap}
+          >
+            approve usdc to quickswap
+          </button>
+          )
+      }
+      {
+        !isBoxApprovedToQuickSwap && 
+        ( 
+          <button 
+            onClick={onBoxApproveToQuickSwap}
+          >
+            approve box to quickswap
+          </button>
+          )
+      }
+
+      {
+        !isLPBoxApproved && 
+        ( 
+          <button 
+            onClick={onLPBoxApprove}
+          >
+            approve box LP 
+          </button>
+        )
+      }
+
+      <button onClick={onAddLiquidity}>
+        add Liquidity
+      </button>
     </>
   )
 }

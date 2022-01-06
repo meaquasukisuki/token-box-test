@@ -24,6 +24,8 @@ export interface ContextValues {
   // LP Tokens
   uniswapEthDpiLpBalance?: BigNumber
   uniswapEthMviLpBalance?: BigNumber
+  uniswapBoxLpBalance?: BigNumber
+  uniswapEth2xLpBalance?: BigNumber
 
   // For Legacy DPI LM Program
   stakedUniswapEthDpiLpBalance?: BigNumber
@@ -36,4 +38,8 @@ export interface ContextValues {
   // For Current MVI LM Program
   stakedUniswapEthMviLpBalance?: BigNumber
   unharvestedMviRewardsBalance?: BigNumber
+
+  // For Current Box LM Program
+  stakedBoxLpBalance?: BigNumber
+  userStakedBoxLpBalance?: BigNumber
 }

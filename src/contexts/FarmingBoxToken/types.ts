@@ -1,8 +1,20 @@
 export interface ContextValues {
-    isApproved?: boolean
-    isApproving?: boolean
+    isBoxApproved?: boolean
+    isUSDCTokenApproved?:boolean
+    isLPBoxApproved?:boolean
+    isBoxApproving?:boolean
+    isLPBoxApproving?:boolean
+    isUSDCTokenApproving?:boolean
+    isBoxApprovedToQuickSwap?:boolean
+    isUSDCTokenApprovedToQuickSwap?:boolean
+    isBoxApprovingToQuickSwap?:boolean
+    isUSDCTokenApprovingToQuickSwap?:boolean
     isPoolActive?: boolean
-    onApprove: () => void
+    onBoxApprove: () => void
+    onUSDCApprove: () => void
+    onLPBoxApprove: () => void
+    onBoxApproveToQuickSwap: () => void
+    onUSDCTokenApproveToQuickSwap: () => void
     onStake: (amount: string) => void
     onUnstake: (amount: string) => void
     onHarvest: () => void

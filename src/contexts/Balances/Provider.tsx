@@ -14,6 +14,7 @@ import {
   eth2xflipTokenAddress,
   eth2xfliTokenAddress,
   eth2xLeverageIndexAddress,
+  farmBoxTokenAddress,
   farmTwoAddress,
   indexTokenAddress,
   mviStakingRewardsAddress,
@@ -37,6 +38,7 @@ import { MAINNET_CHAIN_DATA, POLYGON_CHAIN_DATA, TEST_POLYGON_CHAIN_DATA } from 
 import { getBalance, getBigNumBalance, getEthBalance } from 'utils/index'
 
 import Context from './Context'
+import {  getBoxTokenContract, getUserBoxStakedBalance } from 'index-sdk/boxStaking'
 
 const Provider: React.FC = ({ children }) => {
   const [ethBalance, setEthBalance] = useState<BigNumber>()
@@ -65,6 +67,11 @@ const Provider: React.FC = ({ children }) => {
     useState<BigNumber>()
   const [uniswapEthMviLpBalance, setUniswapEthMviLpBalance] =
     useState<BigNumber>()
+  const [uniswapBoxLpBalance, setUniswapBoxLpBalance] =
+    useState<BigNumber>()
+
+  const [uniswapEth2xLpBalance, setUniswapEth2xLpBalance] =
+    useState<BigNumber>()
 
   // Legacy DPI LM Program
   const [stakedUniswapEthDpiLpBalance, setStakedUniswapEthDpiLpBalance] =
@@ -81,6 +88,14 @@ const Provider: React.FC = ({ children }) => {
   const [stakedUniswapEthMviLpBalance, setStakedUniswapEthMviLpBalance] =
     useState<BigNumber>()
   const [unharvestedMviRewardsBalance, setUnharvestedMviRewardsBalance] =
+    useState<BigNumber>()
+
+  // Current Box LM Program
+  const [stakedBoxLpBalance, setStakedBoxLpBalance] =
+    useState<BigNumber>()
+  const [unharvestedBoxLpBalance, setUnharvestedBoxLpBalance] =
+    useState<BigNumber>()
+  const [userStakedBoxLpBalance, setUserStakedBoxLpBalance] =
     useState<BigNumber>()
 
   const { account, ethereum, status, chainId } = useWallet()
@@ -177,9 +192,13 @@ const Provider: React.FC = ({ children }) => {
           getBalance(provider, daiTokenPolygonAddress, userAddress),
           getBalance(provider, usdcTokenPolygonAddress, userAddress),
           getBalance(provider, dataTokenPolygonAddress, userAddress),
-          getBalance(provider, eth2xLeverageIndexAddress, userAddress)
+          getBalance(provider, eth2xLeverageIndexAddress, userAddress),
+          getBalance(provider,uniswapBoxLpTokenAddress,userAddress),
+          getBalance(provider,uniswapEth2xLeverageLpTokenAddress,userAddress),
+          getUserBoxStakedBalance(provider,userAddress),
+          getBalance(provider,uniswapBoxLpTokenAddress,farmBoxTokenAddress)
         ])
-
+        
         // polygon
         setWethBalancePolygon(new BigNumber(balances[0]))
         setDpiBalancePolygon(new BigNumber(balances[1]))
@@ -189,15 +208,23 @@ const Provider: React.FC = ({ children }) => {
         setUsdcBalancePolygon(new BigNumber(balances[5]))
         setDataBalancePolygon(new BigNumber(balances[6]))
         setEth2xLeverageIndexBalancePolygon(new BigNumber(balances[7]))
+        setUniswapBoxLpBalance(new BigNumber(balances[8]))
+        setUniswapEth2xLpBalance(new BigNumber(balances[9]))
+        setUserStakedBoxLpBalance(new BigNumber(balances[10]))
+        setStakedBoxLpBalance(new BigNumber(balances[11]))
       } else if (chainId && chainId == TEST_POLYGON_CHAIN_DATA.chainId) {
         // polygon-test
         const balances = await Promise.all([
           getBalance(provider,uniswapBoxLpTokenAddress,userAddress),
-          getBalance(provider,uniswapEth2xLeverageLpTokenAddress,userAddress)
+          getBalance(provider,uniswapEth2xLeverageLpTokenAddress,userAddress),
+          getUserBoxStakedBalance(provider,userAddress),
+          getBalance(provider,uniswapBoxLpTokenAddress,farmBoxTokenAddress)
         ])
+        setUniswapBoxLpBalance(new BigNumber(balances[0]))
+        setUniswapEth2xLpBalance(new BigNumber(balances[1]))
+        setUserStakedBoxLpBalance(new BigNumber(balances[2]))
+        setStakedBoxLpBalance(new BigNumber(balances[3]))
       }
-        
-
     },
     [
       chainId,
@@ -215,12 +242,16 @@ const Provider: React.FC = ({ children }) => {
       setEth2xLeverageIndexBalancePolygon,
       setUniswapEthDpiLpBalance,
       setUniswapEthMviLpBalance,
+      setUniswapBoxLpBalance,
+      setUniswapEth2xLpBalance,
       setStakedUniswapEthDpiLpBalance,
       setUnharvestedIndexBalance,
       setStakedFarmTwoBalance,
       setUnharvestedFarmTwoBalance,
       setStakedUniswapEthMviLpBalance,
       setUnharvestedMviRewardsBalance,
+      setStakedBoxLpBalance,
+      setUserStakedBoxLpBalance
     ]
   )
 
@@ -243,12 +274,16 @@ const Provider: React.FC = ({ children }) => {
       setUsdcBalancePolygon(new BigNumber(0))
       setUniswapEthDpiLpBalance(new BigNumber(0))
       setUniswapEthMviLpBalance(new BigNumber(0))
+      setUniswapBoxLpBalance(new BigNumber(0))
+      setUniswapEth2xLpBalance(new BigNumber(0))
       setStakedUniswapEthDpiLpBalance(new BigNumber(0))
       setUnharvestedIndexBalance(new BigNumber(0))
       setStakedFarmTwoBalance(new BigNumber(0))
       setUnharvestedFarmTwoBalance(new BigNumber(0))
       setStakedUniswapEthMviLpBalance(new BigNumber(0))
       setUnharvestedMviRewardsBalance(new BigNumber(0))
+      setStakedBoxLpBalance(new BigNumber(0))
+      setUserStakedBoxLpBalance(new BigNumber(0))
       setDataBalance(new BigNumber(0))
       setDataBalancePolygon(new BigNumber(0))
       setEth2xLeverageIndexBalancePolygon(new BigNumber(0))
@@ -265,7 +300,6 @@ const Provider: React.FC = ({ children }) => {
       return () => clearInterval(refreshInterval)
     }
   }, [account, ethereum, fetchBalances])
-
   return (
     <Context.Provider
       value={{
@@ -288,12 +322,16 @@ const Provider: React.FC = ({ children }) => {
         dataBalancePolygon,
         uniswapEthDpiLpBalance,
         uniswapEthMviLpBalance,
+        uniswapBoxLpBalance,
+        uniswapEth2xLpBalance,
         stakedUniswapEthDpiLpBalance,
         unharvestedIndexBalance,
         stakedFarmTwoBalance,
         unharvestedFarmTwoBalance,
         stakedUniswapEthMviLpBalance,
         unharvestedMviRewardsBalance,
+        stakedBoxLpBalance,
+        userStakedBoxLpBalance
       }}
     >
       {children}

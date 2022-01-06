@@ -7,7 +7,9 @@ import ConfirmTransactionModal, {
 } from 'components/ConfirmTransactionModal'
 import {
   farmBoxTokenAddress,
+  quickSwapRouterAddress,
   uniswapBoxLpTokenAddress,
+  uniswapRouterAddress,
 } from 'constants/ethContractAddresses'
 import useApproval from 'hooks/useApproval'
 import useTransactionWatcher from 'hooks/useTransactionWatcher'
@@ -18,7 +20,7 @@ import {
   stakeUniswapEthDpiLpTokens,
   unstakeAndClaimEarnedIndexLpReward,
   unstakeUniswapEthDpiLpTokens } from 'index-sdk/stake'
-import {claimEarnedBoxTokenReward, getBoxTokenContract, stakeBoxLpTokens, stakeEth2xLeverageLpTokens} from 'index-sdk/boxStaking';
+import {claimEarnedBoxTokenReward, getBoxTokenContract, getLPBoxTokenContract, getUSDCTokenPolygonContract, stakeBoxLpTokens, stakeEth2xLeverageLpTokens} from 'index-sdk/boxStaking';
 import BigNumber from 'utils/bignumber'
 import { waitTransaction } from 'utils/index'
 import Context from './Context'
@@ -33,17 +35,51 @@ const Provider: React.FC = ({ children }) => {
       onSetTransactionId,
     } = useTransactionWatcher()
     const { account, ethereum } = useWallet()
-  
-    const { isApproved, isApproving, onApprove } = useApproval(
+
+    const { isApproved:isBoxApproved, isApproving:isBoxApproving, onApprove:onBoxApprove } = useApproval(
       farmBoxTokenAddress,
       () => setConfirmTxModalIsOpen(false),
       getBoxTokenContract(ethereum)
     )
+
+    const { isApproved:isLPBoxApproved, isApproving:isLPBoxApproving, onApprove:onLPBoxApprove } = useApproval(
+      farmBoxTokenAddress,
+      () => setConfirmTxModalIsOpen(false),
+      getLPBoxTokenContract(ethereum)
+    )
+
+    const { isApproved:isUSDCTokenApproved, isApproving:isUSDCTokenApproving, onApprove:onUSDCTokenApprove } = useApproval(
+      farmBoxTokenAddress,
+      () => setConfirmTxModalIsOpen(false),
+      getUSDCTokenPolygonContract(ethereum)
+    )
   
-    const handleApprove = useCallback(() => {
+    const { isApproved:isBoxApprovedToQuickSwap, isApproving:isBoxApprovingToQuickSwap, onApprove:onBoxApproveToQuickSwap } = useApproval(
+      quickSwapRouterAddress,
+      () => setConfirmTxModalIsOpen(false),
+      getBoxTokenContract(ethereum)
+    )
+
+    const { isApproved:isUSDCTokenApprovedToQuickSwap, isApproving:isUSDCTokenApprovingToQuickSwap, onApprove:onUSDCTokenApproveToQuickSwap } = useApproval(
+      quickSwapRouterAddress,
+      () => setConfirmTxModalIsOpen(false),
+      getUSDCTokenPolygonContract(ethereum)
+    )
+  
+    const handleBoxApprove = useCallback(() => {
       setConfirmTxModalIsOpen(true)
-      onApprove()
-    }, [onApprove, setConfirmTxModalIsOpen])
+      onBoxApprove()
+    }, [onBoxApprove, setConfirmTxModalIsOpen])
+
+    const handleUSDCTokenApprove = useCallback(() => {
+      setConfirmTxModalIsOpen(true)
+      onUSDCTokenApprove()
+    }, [onUSDCTokenApprove, setConfirmTxModalIsOpen])
+
+    const handleBoxLPApprove = useCallback(() => {
+      setConfirmTxModalIsOpen(true)
+      onLPBoxApprove()
+    }, [onLPBoxApprove, setConfirmTxModalIsOpen])
   
     const handleStake = useCallback(
       async (amount: string) => {
@@ -54,7 +90,7 @@ const Provider: React.FC = ({ children }) => {
         onSetTransactionStatus(TransactionStatusType.IS_APPROVING)
   
         const bigStakeQuantity = new BigNumber(amount).multipliedBy(
-          new BigNumber(10).pow(6)
+          new BigNumber(10).pow(18)
         )
         const transactionId = await stakeBoxLpTokens(
           ethereum as provider,
@@ -141,8 +177,7 @@ const Provider: React.FC = ({ children }) => {
   
       const transactionId = await claimEarnedBoxTokenReward(
         ethereum as provider,
-        account,
-        0
+        account
       )
   
       if (!transactionId) {
@@ -214,14 +249,26 @@ const Provider: React.FC = ({ children }) => {
     return (
       <Context.Provider
         value={{
-          isApproved,
-          isApproving,
+          isBoxApproved,
+          isLPBoxApproved,
+          isUSDCTokenApproved,
+          isBoxApproving,
+          isUSDCTokenApproving,
+          isLPBoxApproving,
           isPoolActive,
-          onApprove: handleApprove,
+          onBoxApprove:handleBoxApprove,
+          onLPBoxApprove:handleBoxLPApprove,
+          onUSDCApprove: handleUSDCTokenApprove,
           onHarvest: handleHarvest,
           onUnstakeAndHarvest: handleUnstakeAndHarvest,
           onStake: handleStake,
           onUnstake: handleUnstake,
+          isBoxApprovedToQuickSwap,
+          isUSDCTokenApprovedToQuickSwap,
+          isBoxApprovingToQuickSwap,
+          isUSDCTokenApprovingToQuickSwap,
+          onBoxApproveToQuickSwap,
+          onUSDCTokenApproveToQuickSwap
         }}
       >
         {children}

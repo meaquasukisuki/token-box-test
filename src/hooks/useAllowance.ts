@@ -26,7 +26,6 @@ const useAllowance = (spenderAddress?: string, tokenContract?: Contract) => {
         provider,
         tokenContract
       )
-
       setAllowance(new BigNumber(allowance))
     },
     [setAllowance, spenderAddress]

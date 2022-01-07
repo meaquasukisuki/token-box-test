@@ -41,7 +41,7 @@ const PricesProvider: React.FC = ({ children }) => {
   const [apy] = useState<string>('0.00')
   const [farmTwoApy, setFarmTwoApy] = useState<string>('0.00')
   const [mviRewardsApy, setMviRewardsApy] = useState<string>('0.00')
-
+  
   const {
     loading: ethDpiDataIsLoading,
     error: ethDpiDataError,

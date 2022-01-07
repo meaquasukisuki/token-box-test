@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers";
+
 export interface ContextValues {
     isBoxApproved?: boolean
     isUSDCTokenApproved?:boolean
@@ -18,5 +20,6 @@ export interface ContextValues {
     onStake: (amount: string) => void
     onUnstake: (amount: string) => void
     onHarvest: () => void
-    onUnstakeAndHarvest: () => void
+    onUnstakeAndHarvest: (amount: string) => void
+    // getPoolAPR: () => BigNumber
 }

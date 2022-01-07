@@ -22,7 +22,7 @@ const WalletButton: React.FC = () => {
     connect,
   } = useWallet()
   const ens = useLookupAddress()
-
+  
   const onClick = useCallback(() => {
     // If the user comes from the onto app it should directly connect without opening the web3 modal
     if (status !== 'connected' && (window as any).ethereum?.isONTO) {

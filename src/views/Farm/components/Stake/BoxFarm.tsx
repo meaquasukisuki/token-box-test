@@ -14,12 +14,16 @@ import useWallet from 'hooks/useWallet'
 import { fromWei, getBalance } from 'utils'
 
 import BoxStakeModal from './components/BoxStakeModal'
+import BoxUnstakeModal from './components/BoxUnstakeModal'
+import BoxUnstakeAndHarvestModal from './components/BoxUnstakeAndHarvestModal'
 import {  addLiquidity, stakeBoxLpTokens, swapETHForExactTokens } from 'index-sdk/boxStaking'
 import BigNumber from 'utils/bignumber'
 import { ethToBoxPath, ethToUSDCPath } from 'constants/ethContractAddresses'
 
 const Stake: React.FC = () => {
   const [stakeModalIsOpen, setStakeModalIsOpen] = useState(false)
+  const [unstakeModalIsOpen, setUnstakeModalIsOpen] = useState(false)
+  const [unstakeAndHarvestModalIsOpen, setUnstakeAndHarvestModalIsOpen] = useState(false)
   const [APR, setAPR] = useState(0)
   const {status,ethereum,account} = useWallet()
   
@@ -48,6 +52,7 @@ const Stake: React.FC = () => {
     onUSDCTokenApproveToQuickSwap,
     onBoxApproveToQuickSwap,
     onStake,
+    onUnstake,
     onUnstakeAndHarvest,
     onHarvest,
   } = useBoxTokenFarm()
@@ -83,6 +88,20 @@ const Stake: React.FC = () => {
     setStakeModalIsOpen(false)
   }, [setStakeModalIsOpen])
 
+  const handleDismissUnstakeModal = useCallback(
+    () => {
+      setUnstakeModalIsOpen(false)
+    },
+    [setUnstakeModalIsOpen],
+  )
+
+  const handleDismissUnstakeAndHarvestModal = useCallback(
+    () => {
+      setUnstakeAndHarvestModalIsOpen(false)
+    },
+    [setUnstakeAndHarvestModalIsOpen],
+  )
+
   const handleOnStake = useCallback(
     (amount: string) => {
       onStake(amount)
@@ -94,6 +113,39 @@ const Stake: React.FC = () => {
   const handleStakeClick = useCallback(() => {
     setStakeModalIsOpen(true)
   }, [setStakeModalIsOpen])
+
+  const handleUnstakeClick = useCallback(
+    () => {
+      setUnstakeModalIsOpen(true)
+    },
+    [setUnstakeModalIsOpen],
+  )
+
+  const handleUnstakeAndHarvestClick = useCallback(
+    () => {
+      setUnstakeAndHarvestModalIsOpen(true)
+    },
+    [setUnstakeAndHarvestModalIsOpen],
+  )
+
+  const handleOnUnstake = useCallback(
+    (amount: string) => {
+      onUnstake(amount)
+      handleDismissUnstakeModal()
+    },
+    [onUnstake,handleDismissUnstakeModal]
+  )
+
+  const handleOnUnstakeAndHarvest = useCallback(
+    (amount: string) => {
+      onUnstakeAndHarvest(amount)
+      handleDismissUnstakeAndHarvestModal()
+    },
+    [
+      onUnstakeAndHarvest,
+      handleDismissUnstakeAndHarvestModal
+    ],
+  )
 
   const StakeButton = useMemo(() => {
     if (status !== 'connected') {
@@ -120,20 +172,48 @@ const Stake: React.FC = () => {
   }, [isLPBoxApproved, isLPBoxApproving, status, handleStakeClick, onLPBoxApprove])
 
   const UnstakeButton = useMemo(() => {
-    const hasStaked = stakedBoxLpBalance && fromWei(stakedBoxLpBalance).gt(0)
-    if (status !== 'connected' || !hasStaked) {
-      return <Button disabled full text='Unstake & Claim' variant='secondary' />
+    if (status !== 'connected') {
+      return <Button disabled full text='Unstake' variant='secondary' />
     }
 
-    return (
-      <Button
-        full
-        onClick={onUnstakeAndHarvest}
-        text='Unstake & Claim'
-        variant='secondary'
-      />
-    )
-  }, [stakedBoxLpBalance, status, onUnstakeAndHarvest])
+    if ((!ethereum || !account || !userStakedBoxLpBalance || userStakedBoxLpBalance.lte(0))) {
+      return (
+        <Button
+          disabled
+          full
+          text={'Not Staked'}
+          variant={
+            status !== 'connected' ? 'secondary' : 'default'
+          }
+        />
+      )
+    }
+    else  {
+      return <Button full onClick={handleUnstakeClick} text='Unstake' />
+    }
+  }, [userStakedBoxLpBalance, status, handleUnstakeClick])
+
+  const UnstakeAndHarvestButton = useMemo(() => {
+    if (status !== 'connected') {
+      return <Button disabled full text='Unstake' variant='secondary' />
+    }
+    if ((!ethereum || !account || !userStakedBoxLpBalance || userStakedBoxLpBalance.lte(0))) {
+      return (
+        <Button
+          disabled
+          full
+          text={'Not Staked'}
+          variant={
+            status !== 'connected' ? 'secondary' : 'default'
+          }
+        />
+      )
+    }
+    else  {
+      return <Button full onClick={handleUnstakeAndHarvestClick} text='Unstake & Harvest' />
+    }
+
+  }, [userStakedBoxLpBalance, status, handleUnstakeAndHarvestClick])
 
   const ClaimButton = useMemo(() => {
     if (status !== 'connected') {
@@ -218,8 +298,11 @@ const Stake: React.FC = () => {
             {StakeButton}
             <Spacer />
             {ClaimButton}
-            <Spacer />
+            <Spacer/>
             {UnstakeButton}
+            <Spacer />
+            {UnstakeAndHarvestButton}
+
           </StyledCardActions>
         </div>
       </Card>
@@ -228,6 +311,18 @@ const Stake: React.FC = () => {
         onDismiss={handleDismissStakeModal}
         onStake={handleOnStake}
       />
+      <BoxUnstakeModal
+        isOpen={unstakeModalIsOpen}
+        onDismiss={handleDismissUnstakeModal}
+        onUnstake={handleOnUnstake}
+      />
+
+      <BoxUnstakeAndHarvestModal
+        isOpen={unstakeAndHarvestModalIsOpen}
+        onDismiss={handleDismissUnstakeAndHarvestModal}
+        onUnstakeAndHarvest={handleOnUnstakeAndHarvest}
+      />
+
       <button onClick={onGetUsdc}>
         get Usdc
       </button>

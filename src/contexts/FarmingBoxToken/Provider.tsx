@@ -20,7 +20,7 @@ import {
   stakeUniswapEthDpiLpTokens,
   unstakeAndClaimEarnedIndexLpReward,
   unstakeUniswapEthDpiLpTokens } from 'index-sdk/stake'
-import {claimEarnedBoxTokenReward, getBoxTokenContract, getLPBoxTokenContract, getUSDCTokenPolygonContract, stakeBoxLpTokens, stakeEth2xLeverageLpTokens} from 'index-sdk/boxStaking';
+import {claimEarnedBoxTokenReward, getBoxTokenContract, getBoxTokenFarmContract, getLPBoxTokenContract, getUSDCTokenPolygonContract, stakeBoxLpTokens, stakeEth2xLeverageLpTokens, unstakeAndHarvest, unStakeLpBox} from 'index-sdk/boxStaking';
 import BigNumber from 'utils/bignumber'
 import { waitTransaction } from 'utils/index'
 import Context from './Context'
@@ -123,51 +123,47 @@ const Provider: React.FC = ({ children }) => {
       ]
     )
 
-    const handleUnstake = () => {
-      console.log("test");
-    }
+    const handleUnstake = useCallback(
+      async (amount: string) => {
+        if (!ethereum || !account || !amount || new BigNumber(amount).lte(0))
+          return
   
-    // const handleUnstake = useCallback(
-    //   async (amount: string) => {
-    //     if (!ethereum || !account || !amount || new BigNumber(amount).lte(0))
-    //       return
+        setConfirmTxModalIsOpen(true)
+        onSetTransactionStatus(TransactionStatusType.IS_APPROVING)
   
-    //     setConfirmTxModalIsOpen(true)
-    //     onSetTransactionStatus(TransactionStatusType.IS_APPROVING)
+        const bigUnstakeQuantity = new BigNumber(amount).multipliedBy(
+          new BigNumber(10).pow(18)
+        )
+        const transactionId = await unStakeLpBox(
+          ethereum as provider,
+          bigUnstakeQuantity,
+          account,
+        )
   
-    //     const bigStakeQuantity = new BigNumber(amount).multipliedBy(
-    //       new BigNumber(10).pow(18)
-    //     )
-    //     const transactionId = await unstakeUniswapEthDpiLpTokens(
-    //       ethereum as provider,
-    //       account,
-    //       bigStakeQuantity
-    //     )
+        if (!transactionId) {
+          onSetTransactionStatus(TransactionStatusType.IS_FAILED)
+          return
+        }
   
-    //     if (!transactionId) {
-    //       onSetTransactionStatus(TransactionStatusType.IS_FAILED)
-    //       return
-    //     }
+        onSetTransactionId(transactionId)
+        onSetTransactionStatus(TransactionStatusType.IS_PENDING)
   
-    //     onSetTransactionId(transactionId)
-    //     onSetTransactionStatus(TransactionStatusType.IS_PENDING)
+        const success = await waitTransaction(ethereum as provider, transactionId)
   
-    //     const success = await waitTransaction(ethereum as provider, transactionId)
-  
-    //     if (success) {
-    //       onSetTransactionStatus(TransactionStatusType.IS_COMPLETED)
-    //     } else {
-    //       onSetTransactionStatus(TransactionStatusType.IS_FAILED)
-    //     }
-    //   },
-    //   [
-    //     ethereum,
-    //     account,
-    //     setConfirmTxModalIsOpen,
-    //     onSetTransactionId,
-    //     onSetTransactionStatus,
-    //   ]
-    // )
+        if (success) {
+          onSetTransactionStatus(TransactionStatusType.IS_COMPLETED)
+        } else {
+          onSetTransactionStatus(TransactionStatusType.IS_FAILED)
+        }
+      },
+      [
+        ethereum,
+        account,
+        setConfirmTxModalIsOpen,
+        onSetTransactionId,
+        onSetTransactionStatus,
+      ]
+    )
   
     const handleHarvest = useCallback(async () => {
       if (!ethereum || !account) return
@@ -203,48 +199,79 @@ const Provider: React.FC = ({ children }) => {
       onSetTransactionStatus,
     ])
   
-    const handleUnstakeAndHarvest = () => {
-      console.log("handleUnstakeAndHarvest");
-    }
+    // const handleUnstakeAndHarvest = () => {
+    //   console.log("handleUnstakeAndHarvest");
+    // }
 
-    // const handleUnstakeAndHarvest = useCallback(async () => {
-    //   if (!ethereum || !account) return
+    const handleUnstakeAndHarvest = useCallback(async (
+      amount: string
+    ) => {
+      if (!ethereum || !account || !amount || new BigNumber(amount).lte(0))
+        return
   
-    //   setConfirmTxModalIsOpen(true)
-    //   onSetTransactionStatus(TransactionStatusType.IS_APPROVING)
+      setConfirmTxModalIsOpen(true)
+      onSetTransactionStatus(TransactionStatusType.IS_APPROVING)
+
+      const bigUnstakeQuantity = new BigNumber(amount).multipliedBy(
+        new BigNumber(10).pow(18)
+      )
+
+      const transactionId = await unstakeAndHarvest(
+        ethereum as provider,
+        bigUnstakeQuantity,
+        account
+      )
   
-    //   const transactionId = await unstakeAndClaimEarnedIndexLpReward(
-    //     ethereum as provider,
-    //     account
-    //   )
+      if (!transactionId) {
+        onSetTransactionStatus(TransactionStatusType.IS_FAILED)
+        return
+      }
   
-    //   if (!transactionId) {
-    //     onSetTransactionStatus(TransactionStatusType.IS_FAILED)
-    //     return
-    //   }
+      onSetTransactionId(transactionId)
+      onSetTransactionStatus(TransactionStatusType.IS_PENDING)
   
-    //   onSetTransactionId(transactionId)
-    //   onSetTransactionStatus(TransactionStatusType.IS_PENDING)
+      const success = await waitTransaction(ethereum as provider, transactionId)
   
-    //   const success = await waitTransaction(ethereum as provider, transactionId)
-  
-    //   if (success) {
-    //     onSetTransactionStatus(TransactionStatusType.IS_COMPLETED)
-    //   } else {
-    //     onSetTransactionStatus(TransactionStatusType.IS_FAILED)
-    //   }
-    // }, [
-    //   ethereum,
-    //   account,
-    //   setConfirmTxModalIsOpen,
-    //   onSetTransactionId,
-    //   onSetTransactionStatus,
-    // ])
+      if (success) {
+        onSetTransactionStatus(TransactionStatusType.IS_COMPLETED)
+      } else {
+        onSetTransactionStatus(TransactionStatusType.IS_FAILED)
+      }
+    }, [
+      ethereum,
+      account,
+      setConfirmTxModalIsOpen,
+      onSetTransactionId,
+      onSetTransactionStatus,
+    ])
   
     const currentTime = Date.now()
     const isPoolActive = new BigNumber(farmEndTime).isGreaterThan(
       new BigNumber(currentTime)
     )
+
+    const getPoolAPR = async () => {
+      const stakingContract = getBoxTokenFarmContract(ethereum)
+      const boxTokenContract = getBoxTokenContract(ethereum);
+      const boxLpTokenContract = getLPBoxTokenContract(ethereum)
+      // const eth2XLeverageTokenContract = getEth2XLeverageTokenContract(provider);
+      // const eth2USDCLpTokenContract = getEth2USDCLPContract(provider)
+      const annualSeconds = new BigNumber(365).times(24).times(3600)
+      let annualBox = new BigNumber(0)
+      let sushiPerSecond = await stakingContract.methods.sushiPerSecond().call()
+      
+      const ethPoolInfo = stakingContract.methods.poolInfo(0).call()
+      const boxPoolInfo = stakingContract.methods.poolInfo(1).call()
+      const ethAllocPoint = ethPoolInfo?.allocPoint
+      const boxAllocPoint = boxPoolInfo?.allocPoint
+      const percent = new BigNumber(boxAllocPoint)
+      .dividedBy(new BigNumber(ethAllocPoint).plus(new BigNumber(boxAllocPoint)))
+
+      annualBox = annualSeconds.times(sushiPerSecond).times(percent)
+      
+      const reserves = boxLpTokenContract.methods.getReserves().call()
+      
+    }
   
     return (
       <Context.Provider
@@ -268,7 +295,8 @@ const Provider: React.FC = ({ children }) => {
           isBoxApprovingToQuickSwap,
           isUSDCTokenApprovingToQuickSwap,
           onBoxApproveToQuickSwap,
-          onUSDCTokenApproveToQuickSwap
+          onUSDCTokenApproveToQuickSwap,
+          // getPoolAPR
         }}
       >
         {children}

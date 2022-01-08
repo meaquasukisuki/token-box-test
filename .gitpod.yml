@@ -3,7 +3,8 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - init: yarn install && yarn run build
+  - name: task1
+    init: yarn install
     env:
       REACT_APP_ETHEREUM_NETWORK_ID: 1
       REACT_APP_ENVIRONMENT: staging
@@ -78,8 +79,11 @@ tasks:
       REACT_APP_POLYGON_DATA_TOKEN_ADDRESS: 0x1D607Faa0A51518a7728580C238d912747e71F7a
       REACT_APP_POLYGON_BOX_TOKEN_ADDRESS: 0x50f66c5797C5F306Ce57a615F45574DfF00E3C2c
       REACT_APP_QUICK_SWAP_ROUTER_ADDRESS: 0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff
-      
-    command: yarn run start
+    
+    command: yarn start
+ports:
+  - port: 3000
+    onOpen: open-preview
 vscode:
   extensions:
     - dbaeumer.vscode-eslint

@@ -11,7 +11,6 @@ import useBalances from 'hooks/useBalances'
 import useBoxTokenFarm from 'hooks/useBoxTokenFarm'
 import useMediaQuery from 'hooks/useMediaQuery'
 import useWallet from 'hooks/useWallet'
-import { fromWei, getBalance } from 'utils'
 
 import BoxStakeModal from './components/BoxStakeModal'
 import BoxUnstakeModal from './components/BoxUnstakeModal'

@@ -9,6 +9,7 @@ import { Contract } from 'ethers'
 
 const useAllowance = (spenderAddress?: string, tokenContract?: Contract) => {
   const [allowance, setAllowance] = useState<BigNumber>()
+
   const {
     account,
     ethereum,
@@ -16,7 +17,7 @@ const useAllowance = (spenderAddress?: string, tokenContract?: Contract) => {
 
   const fetchAllowance = useCallback(
     async (userAddress: string, provider: provider) => {
-      if (!spenderAddress) {
+      if (!spenderAddress || ! provider) {
         return
       }
 
@@ -28,7 +29,7 @@ const useAllowance = (spenderAddress?: string, tokenContract?: Contract) => {
       )
       setAllowance(new BigNumber(allowance))
     },
-    [setAllowance, spenderAddress]
+    [setAllowance, spenderAddress, account, ethereum]
   )
 
   useEffect(() => {
@@ -39,7 +40,9 @@ const useAllowance = (spenderAddress?: string, tokenContract?: Contract) => {
     fetchAllowance(account, ethereum)
 
     let refreshInterval = setInterval(
-      () => fetchAllowance(account, ethereum),
+      () => {
+        fetchAllowance(account, ethereum)
+      },
       10000
     )
 

@@ -50,18 +50,15 @@ const useApproval = (
     spenderAddress,
   ])
 
-  // useEffect(() => {
-  //   // console.log(allowance.toNumber());
-  //   // console.log(minimumRequiredApprovalQuantity.toNumber());
-  //   if (allowance?.isGreaterThan(minimumRequiredApprovalQuantity)) {
-  //     setIsApproved(true)
-  //     return
-  //   }
-  //   else {
-  //     setIsApproved(false)
-  //   }
-
-  // }, [allowance, setIsApproved])
+  useEffect(() => {
+    if (allowance?.isGreaterThan(minimumRequiredApprovalQuantity)) {      
+      setIsApproved(true)
+      return
+    }
+    else {
+      setIsApproved(false)
+    }
+  }, [allowance, setIsApproved])
 
   return {
     isApproved,

@@ -1,17 +1,20 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import { Button } from 'react-neu'
 
 import styled from 'styled-components'
 
 import Davatar from '@davatar/react'
-import { shortenAddress, useLookupAddress } from '@usedapp/core'
+import { shortenAddress } from '@usedapp/core'
 
 import UnlockWalletModal from 'components/UnlockWalletModal'
 import WalletModal from 'components/WalletModal'
 import useWallet from 'hooks/useWallet'
 
+import { useEnsDomain } from 'hooks/useEnsDomain'
+
 const WalletButton: React.FC = () => {
+
   const {
     account,
     ethereum,
@@ -21,12 +24,14 @@ const WalletButton: React.FC = () => {
     status,
     connect,
   } = useWallet()
-  const ens = useLookupAddress()
+  
+  const ens = useEnsDomain()
   
   const onClick = useCallback(() => {
     // If the user comes from the onto app it should directly connect without opening the web3 modal
     if (status !== 'connected' && (window as any).ethereum?.isONTO) {
       connect('injected')
+
     } else {
       onOpenWalletModal()
     }

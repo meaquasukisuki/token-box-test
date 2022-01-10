@@ -12,6 +12,7 @@ import WalletModal from 'components/WalletModal'
 import useWallet from 'hooks/useWallet'
 
 import { useEnsDomain } from 'hooks/useEnsDomain'
+import { useIntl } from 'react-intl'
 
 const WalletButton: React.FC = () => {
 
@@ -26,7 +27,7 @@ const WalletButton: React.FC = () => {
   } = useWallet()
   
   const ens = useEnsDomain()
-  
+  const intl = useIntl()
   const onClick = useCallback(() => {
     // If the user comes from the onto app it should directly connect without opening the web3 modal
     if (status !== 'connected' && (window as any).ethereum?.isONTO) {
@@ -37,7 +38,12 @@ const WalletButton: React.FC = () => {
     }
   }, [status, connect, onOpenWalletModal])
 
-  const openWalletText = getOpenWalletText(account, ens)
+  let openWalletText = getOpenWalletText(account, ens)
+  if (openWalletText === 'Connect Wallet') {
+    openWalletText = intl.formatMessage({
+      id: 'connect-wallet'
+    })
+  }
   const variant = !!account ? 'tertiary' : 'default'
 
   return (

@@ -30,9 +30,15 @@ const BuySellSelector: React.FC = () => {
   return (
     <StyledCardHeader>
       <StyledBuySellButton onClick={onToggleIsUserBuying}>
-        Buy
+        {intl.formatMessage({
+          id:"buy"
+        })}
       </StyledBuySellButton>
-      <StyledActiveButton>Sell</StyledActiveButton>
+      <StyledActiveButton>
+        {intl.formatMessage({
+          id:"sell"
+        })}
+      </StyledActiveButton>
     </StyledCardHeader>
   )
 }

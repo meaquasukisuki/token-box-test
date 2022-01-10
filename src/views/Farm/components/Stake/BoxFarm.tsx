@@ -18,6 +18,7 @@ import BoxUnstakeAndHarvestModal from './components/BoxUnstakeAndHarvestModal'
 import {  addLiquidity, stakeBoxLpTokens, swapETHForExactTokens } from 'index-sdk/boxStaking'
 import BigNumber from 'utils/bignumber'
 import { ethToBoxPath, ethToUSDCPath } from 'constants/ethContractAddresses'
+import { useIntl } from 'react-intl'
 
 const Stake: React.FC = () => {
   const [stakeModalIsOpen, setStakeModalIsOpen] = useState(false)
@@ -25,7 +26,8 @@ const Stake: React.FC = () => {
   const [unstakeAndHarvestModalIsOpen, setUnstakeAndHarvestModalIsOpen] = useState(false)
   const [APR, setAPR] = useState(0)
   const {status,ethereum,account} = useWallet()
-  
+  const intl = useIntl();
+
   const { 
     stakedFarmTwoBalance: stakedBalance, 
     unharvestedFarmTwoBalance,
@@ -249,7 +251,13 @@ const Stake: React.FC = () => {
               />
               <Spacer size='md' />
               <StyledLmTitle>
-                <StyledCardTitle>Box Token Liquidity Program</StyledCardTitle>
+                <StyledCardTitle>
+                  {
+                    intl.formatMessage({
+                      id: 'box-token-liquidity-program'
+                    })
+                  }
+                </StyledCardTitle>
                 <Spacer size='sm' />
                 <StyledCardSubtitle>
                   Active July 13th, 2021 - August 12th, 2021
@@ -269,7 +277,12 @@ const Stake: React.FC = () => {
                     />
                   </StyledFarmText>
                   <StyledSectionLabel>
-                    Box LP Tokens
+                    {
+                      intl.formatMessage({
+                        id: 'box-lp-tokens'
+                      })
+                    }
+                    {/* Box LP Tokens */}
                   </StyledSectionLabel>
                 </div>
 

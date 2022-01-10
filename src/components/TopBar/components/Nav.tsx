@@ -1,4 +1,5 @@
 import React from 'react'
+import { useIntl } from 'react-intl'
 
 import { NavLink } from 'react-router-dom'
 
@@ -7,6 +8,7 @@ import styled from 'styled-components'
 import LeverageProductsDropdown from './LeverageProductsDropdown'
 
 const Nav: React.FC = () => {
+  const intl = useIntl()
   return (
     <StyledNav>
       {/* <ProductsDropdown /> */}
@@ -15,7 +17,12 @@ const Nav: React.FC = () => {
         $INDEX
       </StyledLink>
       <StyledLink exact activeClassName='active' to='/liquidity-mining'>
-        Liquidity Mining
+        {
+          intl.formatMessage({
+            id: "liquidity-mining"
+          })
+        }
+        {/* Liquidity Mining */}
       </StyledLink>
     </StyledNav>
   )

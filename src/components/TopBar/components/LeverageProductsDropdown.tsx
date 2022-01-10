@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import { useIntl } from 'react-intl'
 
 import { useTheme } from 'react-neu'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -17,7 +18,7 @@ const CustomOption = ({ innerProps, value, label }: any) => (
 const ProductsDropdown: React.FC = () => {
   const theme = useTheme()
   const { pathname } = useLocation()
-
+  const intl = useIntl();
   const dropdownSelectStyles = useMemo(() => {
     const isProductRouteActive =
       pathname === '/ethfli' ||
@@ -75,7 +76,7 @@ const ProductsDropdown: React.FC = () => {
   return (
     <Select
       isSearchable={false}
-      value={{ label: 'Leverage Products' } as any}
+      value={{ label: intl.formatMessage({id: "leverage-products"}) } as any}
       options={[
         // {
         //   value: 'ethfli',

@@ -8,17 +8,23 @@ import Page from 'components/Page'
 
 import BoxFarmCard from './components/Stake/BoxFarm'
 import Treasury from './components/Treasury'
+import { useIntl } from 'react-intl'
 
 const Farm = (props: { title: string }) => {
   useEffect(() => {
     document.title = props.title
   }, [props.title])
-
+  const intl = useIntl();
   return (
     <Page>
       <Container>
         <StyledPageHeader data-cy='liquidity-mining-title'>
-          Liquidity Mining Programs
+          {
+            intl.formatMessage({
+              id: 'liquidity-mining-programs'
+            })
+          }
+          {/* Liquidity Mining Programs */}
         </StyledPageHeader>
         <Spacer size='sm' />
         <StyledPageSubheader data-cy='liquidity-mining-subtitle'>

@@ -395,63 +395,73 @@ export const getPoolStakedValue = async (
   return stakedValue
 }
 
-// export const getPoolAPR = async (
-//   provider: provider,
-//   poolId:number,
-// ): Promise<Number | null> => {
-//   const stakingContract = getBoxTokenFarmContract(provider)
-//   const boxTokenContract = getBoxTokenContract(provider);
-//   const eth2XLeverageTokenContract = getEth2XLeverageTokenContract(provider);
-//   const eth2USDCLpTokenContract = getEth2USDCLPContract(provider)
-//   const annualSeconds = new BigNumber(365).times(24).times(3600)
+export const getPoolAPR = async (
+  provider: provider,
+  poolId:number = 1,
+): Promise<Number | null> => {
+  const stakingContract = getBoxTokenFarmContract(provider)
+  const boxTokenContract = getBoxTokenContract(provider);
+  const lpBoxTokenContract = getLPBoxTokenContract(provider);
+  const eth2XLeverageTokenContract = getEth2XLeverageTokenContract(provider);
+  const eth2USDCLpTokenContract = getEth2USDCLPContract(provider);
+  const annualSeconds = new BigNumber(365).times(24).times(3600);
 
-//   let annualBox;
-//   let sushiPerSecond = await stakingContract.methods.sushiPerSecond().call()
-//   annualBox = annualSeconds.times(sushiPerSecond)
+  let annualBox;
+  let sushiPerSecond = await stakingContract.methods.sushiPerSecond().call()
+  annualBox = annualSeconds.times(sushiPerSecond)
 
-//   let boxToken2Usdc;
-//   let eth2XLeverageToken2Eth;
-//   let usdc2Eth;
-//   let sushiPerSecond;
-//   let distributePercent;
-//   let poolRewardTotal;
-//   let stakedValue;
-//   let boxToken2Eth;
-//   sushiPerSecond = await stakingContract.methods.sushiPerSecond().call()
-//   const boxLpReserveInfo = await boxTokenContract.methods.getReserves().call()
-//   if (boxLpReserveInfo?._reserve0 && boxLpReserveInfo?._reserve1) {
-//     boxToken2Usdc = new BigNumber(boxLpReserveInfo?._reserve0).dividedBy(boxLpReserveInfo?._reserve1)
-//   }
-//   const eth2USDCLpReserveInfo = await eth2USDCLpTokenContract.methods.getReserves().call()
-//   if (eth2USDCLpReserveInfo?._reserve0 && eth2USDCLpReserveInfo?._reserve1) {
-//     usdc2Eth = new BigNumber(eth2USDCLpReserveInfo?._reserve1).dividedBy(eth2USDCLpReserveInfo?._reserve0).dividedBy(1000000000000)
-//   }
-//   const eth2x2ETHLpReserveInfo = await eth2XLeverageTokenContract.methods.getReserves().call()
-//   if (eth2x2ETHLpReserveInfo?._reserve0 && eth2x2ETHLpReserveInfo?._reserve1) {
-//     eth2XLeverageToken2Eth = new BigNumber(eth2x2ETHLpReserveInfo?._reserve0).dividedBy(eth2x2ETHLpReserveInfo?._reserve1).dividedBy(1000000000000)
-//   }
-//   if (usdc2Eth && boxToken2Usdc) {
-//     boxToken2Eth = new BigNumber(usdc2Eth).times(boxToken2Usdc)
-//   }
+  let boxToken2Usdc;
+  let eth2XLeverageToken2Eth;
+  let usdc2Eth;
+  // let sushiPerSecond;
+  let distributePercent;
+  let poolRewardTotal;
+  let stakedValue;
+  let boxToken2Eth;
+  // sushiPerSecond = await stakingContract.methods.sushiPerSecond().call()
+  const boxLpReserveInfo = await boxTokenContract.methods.getReserves().call()
+  if (boxLpReserveInfo?._reserve0 && boxLpReserveInfo?._reserve1) {
+    boxToken2Usdc = new BigNumber(boxLpReserveInfo?._reserve0).dividedBy(boxLpReserveInfo?._reserve1)
+  }
+  const eth2USDCLpReserveInfo = await eth2USDCLpTokenContract.methods.getReserves().call()
+  if (eth2USDCLpReserveInfo?._reserve0 && eth2USDCLpReserveInfo?._reserve1) {
+    usdc2Eth = new BigNumber(eth2USDCLpReserveInfo?._reserve1).dividedBy(eth2USDCLpReserveInfo?._reserve0).dividedBy(1000000000000)
+  }
+  // const eth2x2ETHLpReserveInfo = await eth2XLeverageTokenContract.methods.getReserves().call()
+  // if (eth2x2ETHLpReserveInfo?._reserve0 && eth2x2ETHLpReserveInfo?._reserve1) {
+  //   eth2XLeverageToken2Eth = new BigNumber(eth2x2ETHLpReserveInfo?._reserve0).dividedBy(eth2x2ETHLpReserveInfo?._reserve1).dividedBy(1000000000000)
+  // }
+  if (usdc2Eth && boxToken2Usdc) {
+    boxToken2Eth = new BigNumber(usdc2Eth).times(boxToken2Usdc)
+  }
   
-//   // if pool0 is box token, pool1 is eth 2x leverage
-//   if (poolId === 0) {
-//     distributePercent = await getPoolHarvestDistributePercent(provider,0)
-//     poolRewardTotal = annualSeconds.times(sushiPerSecond).times(boxToken2Eth).times(distributePercent)
-//     const balance = await boxTokenContract.methods.balanceOf(farmBoxTokenAddress).call()
-//     stakedValue = boxToken2Eth.times(balance)
-//   }
-//   if (poolId === 1) {
-//     distributePercent = await getPoolHarvestDistributePercent(provider,1)
-//     poolRewardTotal = annualSeconds.times(sushiPerSecond).times(eth2XLeverageToken2Eth).times(distributePercent)
-//     const balance = await eth2XLeverageTokenContract.methods.balanceOf(farmBoxTokenAddress).call()
-//     stakedValue = eth2XLeverageToken2Eth.times(balance)
-//   }
-//   if (stakedValue.toNumber() === 0) {
-//     return 0;
-//   }
-//   return new BigNumber(poolRewardTotal).dividedBy(stakedValue).toNumber()
-// }
+  if (poolId === 1) {
+    distributePercent = await getPoolHarvestDistributePercent(provider,0);
+    poolRewardTotal = annualBox.times(boxToken2Eth).times(distributePercent);
+    
+    const balance = await lpBoxTokenContract.methods.balanceOf(farmBoxTokenAddress).call();
+    const lpTotalSupply = await lpBoxTokenContract.methods.totalSupply().call();
+    const totalSupplyUSDC = new BigNumber(boxLpReserveInfo?._reserve0)
+    const totalSupplyBox = new BigNumber(boxLpReserveInfo?._reserve1)
+    const stakedUSDC = new BigNumber(balance).times(totalSupplyUSDC).dividedBy(lpTotalSupply).dividedBy(1000000)
+    const stakedBox = new BigNumber(balance).times(totalSupplyBox).dividedBy(lpTotalSupply).dividedBy(1000000)
+    const stakedUSDC2Box = new BigNumber(stakedUSDC).dividedBy(new BigNumber(boxToken2Usdc))
+
+    // const stakedUSDCValue = new BigNumber(balance).dividedBy(lpTotalSupply)
+    stakedValue = stakedBox.plus(stakedUSDC2Box);
+
+  }
+  // if (poolId === 1) {
+  //   distributePercent = await getPoolHarvestDistributePercent(provider,1)
+  //   poolRewardTotal = annualSeconds.times(sushiPerSecond).times(eth2XLeverageToken2Eth).times(distributePercent)
+  //   const balance = await eth2XLeverageTokenContract.methods.balanceOf(farmBoxTokenAddress).call()
+  //   stakedValue = eth2XLeverageToken2Eth.times(balance)
+  // }
+  if (stakedValue.toNumber() === 0) {
+    return 0;
+  }
+  return new BigNumber(poolRewardTotal).dividedBy(stakedValue).toNumber()
+}
 
 export const swapETHForExactTokens = async (
   provider:provider,

@@ -4886,18 +4886,7 @@ array-flatten@^2.1.0:
   resolved "https://registry.npmjs.org/array-flatten/-/array-flatten-2.1.2.tgz"
   integrity sha512-hNfzcOV8W4NdualtqBFPyVO+54DSJuZGY9qT4pRroB6S9e3iiido2ISIC5h9R2sPJ8H3FHCIiEnsv1lPXO3KtQ==
 
-array-includes@^3.1.1, array-includes@^3.1.2, array-includes@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.npmjs.org/array-includes/-/array-includes-3.1.3.tgz"
-  integrity sha512-gcem1KlBU7c9rB+Rq8/3PPKsK2kjqeEBa3bD5kkQo4nYlOHQCJqIJFqBXDEfwaRuYTT4E+FxA9xez7Gf/e3Q7A==
-  dependencies:
-    call-bind "^1.0.2"
-    define-properties "^1.1.3"
-    es-abstract "^1.18.0-next.2"
-    get-intrinsic "^1.1.1"
-    is-string "^1.0.5"
-
-array-includes@^3.1.4:
+array-includes@^3.1.1, array-includes@^3.1.3, array-includes@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/array-includes/-/array-includes-3.1.4.tgz#f5b493162c760f3539631f005ba2bb46acb45ba9"
   integrity sha512-ZTNSQkmWumEbiHO2GF4GmWxYVTiQyJy2XOTa15sdQSrvKn7l+180egQMqlrMOUMCyLMD7pmyQe4mMDUT6Behrw==
@@ -4947,16 +4936,6 @@ array.prototype.flat@^1.2.5:
     call-bind "^1.0.2"
     define-properties "^1.1.3"
     es-abstract "^1.19.0"
-
-array.prototype.flatmap@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.npmjs.org/array.prototype.flatmap/-/array.prototype.flatmap-1.2.4.tgz"
-  integrity sha512-r9Z0zYoxqHz60vvQbWEdXIEtCwHF0yxaWfno9qzXeNHvfyl3BZqygmGzb84dsubyaXLH4husF+NFgMSdpZhk2Q==
-  dependencies:
-    call-bind "^1.0.0"
-    define-properties "^1.1.3"
-    es-abstract "^1.18.0-next.1"
-    function-bind "^1.1.1"
 
 array.prototype.flatmap@^1.2.5:
   version "1.2.5"
@@ -8402,7 +8381,7 @@ error-symbol@^0.1.0:
   resolved "https://registry.npmjs.org/error-symbol/-/error-symbol-0.1.0.tgz"
   integrity sha1-Ck2uN9YA0VopukU9jvkg8YRDM/Y=
 
-es-abstract@^1.17.2, es-abstract@^1.18.0-next.1, es-abstract@^1.18.0-next.2, es-abstract@^1.18.2, es-abstract@^1.18.5:
+es-abstract@^1.17.2, es-abstract@^1.18.0-next.1, es-abstract@^1.18.0-next.2, es-abstract@^1.18.5:
   version "1.18.6"
   resolved "https://registry.npmjs.org/es-abstract/-/es-abstract-1.18.6.tgz"
   integrity sha512-kAeIT4cku5eNLNuUKhlmtuk1/TRZvQoYccn6TO0cSVdf1kzB0T7+dYuVK9MWM7l+/53W2Q8M7N2c6MQvhXFcUQ==
@@ -8743,41 +8722,22 @@ eslint-plugin-react-hooks@^4.3.0:
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.3.0.tgz#318dbf312e06fab1c835a4abef00121751ac1172"
   integrity sha512-XslZy0LnMn+84NEG9jSGR6eGqaZB3133L8xewQo3fQagbQuGt7a63gf+P1NGKZavEYEC3UXaWEAA/AqDkuN6xA==
 
-eslint-plugin-react@^7.21.5:
-  version "7.25.1"
-  resolved "https://registry.npmjs.org/eslint-plugin-react/-/eslint-plugin-react-7.25.1.tgz"
-  integrity sha512-P4j9K1dHoFXxDNP05AtixcJEvIT6ht8FhYKsrkY0MPCPaUMYijhpWwNiRDZVtA8KFuZOkGSeft6QwH8KuVpJug==
-  dependencies:
-    array-includes "^3.1.3"
-    array.prototype.flatmap "^1.2.4"
-    doctrine "^2.1.0"
-    estraverse "^5.2.0"
-    has "^1.0.3"
-    jsx-ast-utils "^2.4.1 || ^3.0.0"
-    minimatch "^3.0.4"
-    object.entries "^1.1.4"
-    object.fromentries "^2.0.4"
-    object.values "^1.1.4"
-    prop-types "^15.7.2"
-    resolve "^2.0.0-next.3"
-    string.prototype.matchall "^4.0.5"
-
-eslint-plugin-react@^7.27.1:
-  version "7.27.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.27.1.tgz#469202442506616f77a854d91babaae1ec174b45"
-  integrity sha512-meyunDjMMYeWr/4EBLTV1op3iSG3mjT/pz5gti38UzfM4OPpNc2m0t2xvKCOMU5D6FSdd34BIMFOvQbW+i8GAA==
+eslint-plugin-react@^7.21.5, eslint-plugin-react@^7.29.3:
+  version "7.29.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.29.3.tgz#f4eab757f2756d25d6d4c2a58a9e20b004791f05"
+  integrity sha512-MzW6TuCnDOcta67CkpDyRfRsEVx9FNMDV8wZsDqe1luHPdGTrQIUaUXD27Ja3gHsdOIs/cXzNchWGlqm+qRVRg==
   dependencies:
     array-includes "^3.1.4"
     array.prototype.flatmap "^1.2.5"
     doctrine "^2.1.0"
     estraverse "^5.3.0"
     jsx-ast-utils "^2.4.1 || ^3.0.0"
-    minimatch "^3.0.4"
+    minimatch "^3.1.2"
     object.entries "^1.1.5"
     object.fromentries "^2.0.5"
     object.hasown "^1.1.0"
     object.values "^1.1.5"
-    prop-types "^15.7.2"
+    prop-types "^15.8.1"
     resolve "^2.0.0-next.3"
     semver "^6.3.0"
     string.prototype.matchall "^4.0.6"
@@ -8930,12 +8890,7 @@ estraverse@^4.1.1, estraverse@^4.2.0:
   resolved "https://registry.npmjs.org/estraverse/-/estraverse-4.3.0.tgz"
   integrity sha512-39nnKffWz8xN1BU/2c79n9nB9HDzo0niYUqx6xyqUnyoAnQyyWpOTdZEeiCch8BBu515t4wp9ZmgVfVhn9EBpw==
 
-estraverse@^5.1.0, estraverse@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.npmjs.org/estraverse/-/estraverse-5.2.0.tgz"
-  integrity sha512-BxbNGGNm0RyRYvUdHpIwv9IWzeM9XClbOxwoATuFdOE7ZE6wHL+HQ5T8hoPM+zHvmKzzsEqhgy0GrQ5X13afiQ==
-
-estraverse@^5.3.0:
+estraverse@^5.1.0, estraverse@^5.2.0, estraverse@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-5.3.0.tgz#2eea5290702f26ab8fe5370370ff86c965d21123"
   integrity sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==
@@ -12708,15 +12663,7 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-"jsx-ast-utils@^2.4.1 || ^3.0.0", jsx-ast-utils@^3.1.0:
-  version "3.2.0"
-  resolved "https://registry.npmjs.org/jsx-ast-utils/-/jsx-ast-utils-3.2.0.tgz"
-  integrity sha512-EIsmt3O3ljsU6sot/J4E1zDRxfBNrhjyf/OKjlydwgEimQuznlM4Wv7U+ueONJMyEn1WRE0K8dhi3dVAXYT24Q==
-  dependencies:
-    array-includes "^3.1.2"
-    object.assign "^4.1.2"
-
-jsx-ast-utils@^3.2.1:
+"jsx-ast-utils@^2.4.1 || ^3.0.0", jsx-ast-utils@^3.1.0, jsx-ast-utils@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-3.2.1.tgz#720b97bfe7d901b927d87c3773637ae8ea48781b"
   integrity sha512-uP5vu8xfy2F9A6LGC22KO7e2/vGTS1MhP+18f++ZNlf0Ohaxbc9nIEwHAsejlJKyzfZzU5UIhe5ItYkitcZnZA==
@@ -13697,10 +13644,17 @@ minimalistic-crypto-utils@^1.0.1:
   resolved "https://registry.npmjs.org/minimalistic-crypto-utils/-/minimalistic-crypto-utils-1.0.1.tgz"
   integrity sha1-9sAMHAsIIkblxNmd+4x8CDsrWCo=
 
-minimatch@3.0.4, minimatch@^3.0.4:
+minimatch@3.0.4:
   version "3.0.4"
   resolved "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz"
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
+  dependencies:
+    brace-expansion "^1.1.7"
+
+minimatch@^3.0.4, minimatch@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
+  integrity sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==
   dependencies:
     brace-expansion "^1.1.7"
 
@@ -14290,16 +14244,7 @@ object.assign@^4.1.0, object.assign@^4.1.2:
     has-symbols "^1.0.1"
     object-keys "^1.1.1"
 
-object.entries@^1.1.0, object.entries@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.npmjs.org/object.entries/-/object.entries-1.1.4.tgz"
-  integrity sha512-h4LWKWE+wKQGhtMjZEBud7uLGhqyLwj8fpHOarZhD2uY3C9cRtk57VQ89ke3moByLXMedqs3XCHzyb4AmA2DjA==
-  dependencies:
-    call-bind "^1.0.2"
-    define-properties "^1.1.3"
-    es-abstract "^1.18.2"
-
-object.entries@^1.1.5:
+object.entries@^1.1.0, object.entries@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/object.entries/-/object.entries-1.1.5.tgz#e1acdd17c4de2cd96d5a08487cfb9db84d881861"
   integrity sha512-TyxmjUoZggd4OrrU1W66FMDG6CuqJxsFvymeyXI51+vQLN67zYfZseptRge703kKQdo4uccgAKebXFcRCzk4+g==
@@ -14307,16 +14252,6 @@ object.entries@^1.1.5:
     call-bind "^1.0.2"
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
-
-object.fromentries@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.npmjs.org/object.fromentries/-/object.fromentries-2.0.4.tgz"
-  integrity sha512-EsFBshs5RUUpQEY1D4q/m59kMfz4YJvxuNCJcv/jWwOJr34EaVnG11ZrZa0UHB3wnzV1wx8m58T4hQL8IuNXlQ==
-  dependencies:
-    call-bind "^1.0.2"
-    define-properties "^1.1.3"
-    es-abstract "^1.18.0-next.2"
-    has "^1.0.3"
 
 object.fromentries@^2.0.5:
   version "2.0.5"
@@ -14351,16 +14286,7 @@ object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
-object.values@^1.1.0, object.values@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.npmjs.org/object.values/-/object.values-1.1.4.tgz"
-  integrity sha512-TnGo7j4XSnKQoK3MfvkzqKCi0nVe/D9I9IjwTNYdb/fxYHpjrluHVOgw0AF6jrRFGMPHdfuidR09tIDiIvnaSg==
-  dependencies:
-    call-bind "^1.0.2"
-    define-properties "^1.1.3"
-    es-abstract "^1.18.2"
-
-object.values@^1.1.5:
+object.values@^1.1.0, object.values@^1.1.4, object.values@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/object.values/-/object.values-1.1.5.tgz#959f63e3ce9ef108720333082131e4a459b716ac"
   integrity sha512-QUZRW0ilQ3PnPpbNtgdNV1PDbEqLIiSFB3l+EnGtBQ/8SUTLj1PZwtQHABZtLgwpJZTSZhuGLOGk57Drx2IvYg==
@@ -15873,14 +15799,14 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
-  version "15.7.2"
-  resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
-  integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
+prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
   dependencies:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
-    react-is "^16.8.1"
+    react-is "^16.13.1"
 
 proxy-addr@~2.0.5:
   version "2.0.7"
@@ -16258,7 +16184,7 @@ react-intl@^5.24.0:
     intl-messageformat "9.11.0"
     tslib "^2.1.0"
 
-react-is@^16.10.2, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
+react-is@^16.10.2, react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -18083,20 +18009,6 @@ string-width@^5.0.0:
     emoji-regex "^9.2.2"
     is-fullwidth-code-point "^4.0.0"
     strip-ansi "^7.0.1"
-
-string.prototype.matchall@^4.0.5:
-  version "4.0.5"
-  resolved "https://registry.npmjs.org/string.prototype.matchall/-/string.prototype.matchall-4.0.5.tgz"
-  integrity sha512-Z5ZaXO0svs0M2xd/6By3qpeKpLKd9mO4v4q3oMEQrk8Ck4xOD5d5XeBOOjGrmVZZ/AHB1S0CgG4N5r1G9N3E2Q==
-  dependencies:
-    call-bind "^1.0.2"
-    define-properties "^1.1.3"
-    es-abstract "^1.18.2"
-    get-intrinsic "^1.1.1"
-    has-symbols "^1.0.2"
-    internal-slot "^1.0.3"
-    regexp.prototype.flags "^1.3.1"
-    side-channel "^1.0.4"
 
 string.prototype.matchall@^4.0.6:
   version "4.0.6"
